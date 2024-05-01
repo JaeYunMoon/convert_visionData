@@ -1,0 +1,58 @@
+{
+CATEGORIES : 
+[
+  {supercategory: "Lying",
+  id: 0,
+  name : "pig_Laying"},
+  {supercategory: "Standing",
+  id: 1,
+  name : "pig_Standing"}
+],
+
+SUPERCATEGORY :
+  {
+    LYING: {
+      keypoints : [
+        "nose",
+        "hip",
+        "neck",
+        "body_center",
+        "lower_armpit",
+        "upper_back",
+        "upper_backbone",
+        "lower_backbone"
+            ],
+      skeleton : [
+        [1,3],
+        [3,7],
+        [6,7],
+        [5,7],
+        [7,4],
+        [4,8],
+        [2,8]
+        ]
+    },
+
+    STANDING: {
+      keypoints : [
+        "nose",
+        "hip",
+        "neck",
+        "body_center",
+        "left_armpit",
+        "right_armpit",
+        "upper_backbone",
+        "lower_backbone"
+            ],
+      skeleton : [
+        [1,3],
+        [3,7],
+        [7,6],
+        [7,5],
+        [7,4],
+        [4,8],
+        [8,2]
+        ]
+    }
+  }
+}
