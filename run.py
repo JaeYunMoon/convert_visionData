@@ -11,7 +11,7 @@ from pathlib import Path
 
 from utils.setting import ConvertType, disable_Button #, Checking_button
 from utils.general import setCheckDataPathDir, setCheckDataReferFile
-from utils.convert import setDataConvert
+from utils.datasetting import setDataSetting
 
 def handle_exception(exc_type, exc_value, exc_traceback):
     """
@@ -58,7 +58,6 @@ class MyApp(QMainWindow,QPlainTextEdit):
         self.setWindowIcon(QIcon("./refer/Fill_color.png"))
         self.setWindowTitle("Sim2Real")
         widget = QWidget()
-
         
         TopGroup = QHBoxLayout()
         TopGroup.addWidget(self.FormatLayout())
@@ -215,8 +214,9 @@ class MyApp(QMainWindow,QPlainTextEdit):
         formatType = self.checkingFormat()
         AnnoDict = self.checkingAnnotation()
 
-        dc = setDataConvert(_dataDir.getLabelList(),_referinfo,formatType,AnnoDict)
+        dc =setDataSetting(_dataDir.getLabelList(),_referinfo,formatType)
         dc.run()
+        
 
         # print(_dataDir.getimgList())
         # print(_dataDir.getLabelList())
@@ -247,6 +247,7 @@ class MyApp(QMainWindow,QPlainTextEdit):
             annotationDict["box3DPX"] = 1 
     
         return annotationDict
+    
 if __name__ == "__main__":
     app =QApplication(sys.argv)
     myWindow = MyApp()
