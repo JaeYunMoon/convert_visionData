@@ -56,26 +56,30 @@ class Keypoint2D:
             self.kp.append(z)
 
         return self.kp, self.count
-    def getNameCOCO(self):
+    def getKpName(self):
         # len 9개임 -> point 는 17개임 
         return self.keypointName
 
 class Segmentation:
     def __init__(self,segmentationID:int,segmentationImg:str,imgWidth,imgHeight,imgName) -> None:
         self.colorCoordinateJson = json_dict(UNREAL_IMAGE_COORDINATE)
+        print(segmentationID)
         self.w,self.h = imgWidth,imgHeight
         self.imgName = imgName
         # sim2real - > int 
-        colorcoord = list(self.colorCoordinateJson[str(segmentationID)])
-        segImg = cv2.imread(segmentationImg)
+        try:
+            colorcoord = list(self.colorCoordinateJson[str(segmentationID)])
+            coord = [colorcoord[2],colorcoord[1],colorcoord[0]]
+            segImg = cv2.imread(segmentationImg)
 
-        coord = [colorcoord[2],colorcoord[1],colorcoord[0]]
-        coord_np = np.array(coord,dtype="int64")
-        coord_upper = coord_np + 5
-        coord_lower = coord_np - 5 
+            coord_np = np.array(coord,dtype="int64")
+            coord_upper = coord_np + 5
+            coord_lower = coord_np - 5 
 
-        img_mask = cv2.inRange(segImg,coord_lower,coord_upper)
-        contours,_ = cv2.findContours(img_mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_TC89_KCOS)
+            img_mask = cv2.inRange(segImg,coord_lower,coord_upper)
+            contours,_ = cv2.findContours(img_mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_TC89_KCOS)
+        except:
+            contours = None
 
         if not contours:
             self.contours = []  

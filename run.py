@@ -11,7 +11,8 @@ from pathlib import Path
 
 from utils.setting import ConvertType, disable_Button #, Checking_button
 from utils.general import setCheckDataPathDir, setCheckDataReferFile
-from utils.datasetting import setDataSetting
+from utils.datasetting import getDatas 
+from utils.convert import CovertSaveDataset
 
 def handle_exception(exc_type, exc_value, exc_traceback):
     """
@@ -119,18 +120,30 @@ class MyApp(QMainWindow,QPlainTextEdit):
         option_innerLayout= QVBoxLayout()
         self.imageCopy = QCheckBox("Copy Image")
         self.RandomConfirmImage = QCheckBox("Random Images Check Annotation")
+        self.DatasaveOption = QCheckBox("Save Path")
 
         self.RandomImageCount = QSpinBox(self)
         self.RandomImageCount.setMaximum(1000)
         self.RandomImageCount.setMinimum(0)
         self.RandomImageCount.setSingleStep(1)
+        self.RandomImageCount.setFixedWidth(250)
+        self.RandomImageCount.setFixedHeight(30)
         self.RandomImageCount.setEnabled(False)
         self.RandomConfirmImage.stateChanged.connect(lambda:disable_Button(self.RandomConfirmImage,self.RandomImageCount))
 
+        self.DatasaveOptionPath = QTextEdit("./result",self)
+        self.DatasaveOptionPath.setFixedHeight(30)
+        self.DatasaveOptionPath.setFixedWidth(250)
+        self.DatasaveOptionPath.setEnabled(False)
+        self.DatasaveOption.stateChanged.connect(lambda:disable_Button(self.DatasaveOption,self.DatasaveOptionPath))
+        
         
         option_innerLayout.addWidget(self.imageCopy)
         option_innerLayout.addWidget(self.RandomConfirmImage)
         option_innerLayout.addWidget(self.RandomImageCount)
+        option_innerLayout.addWidget(self.DatasaveOption)
+        option_innerLayout.addWidget(self.DatasaveOptionPath)
+
         optionGroup.setLayout(option_innerLayout)
 
         return optionGroup
@@ -214,9 +227,16 @@ class MyApp(QMainWindow,QPlainTextEdit):
         formatType = self.checkingFormat()
         AnnoDict = self.checkingAnnotation()
 
-        dc =setDataSetting(_dataDir.getLabelList(),_referinfo,formatType)
-        dc.run()
-        
+        if self.DatasaveOption.isChecked():
+            saveRoot = self.DatasaveOptionPath.toPlainText()
+        else:
+            saveRoot = _dataDir.DataPath
+
+        AllDataset =getDatas(_dataDir.getLabelList(),_referinfo,formatType)
+        csd = CovertSaveDataset(AllDataset,
+                                saveRoot,
+                                AnnoDict,
+                                formatType)
 
         # print(_dataDir.getimgList())
         # print(_dataDir.getLabelList())

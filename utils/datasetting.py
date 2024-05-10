@@ -37,6 +37,25 @@ def getDatas(gtList:List,
                 objsegInfo = Segmentation(objsegid,segImPath,imgWidth,imgHeight,imgName)
                 # print(objBbox.getCOCO())
 
+                data =setDatasets(imgName,
+                            imgWidth,
+                            imgHeight,
+                            objName,
+                            objUniq,
+                            objCustom,
+                            objBbox,
+                            objRbox,
+                            obj3Dbox,
+                            objKp2dInfo,
+                            objKp3dInfo,
+                            objsegInfo,
+                            refer,
+                            formatType
+                            )
+                allDatasets.addDatasets(data)
+    
+    return allDatasets
+
 def ReadtoJson(jsPath):
     with open(jsPath) as f:
         data = json.load(f)
@@ -57,7 +76,7 @@ class setDatasets:
                  kp3d,
                  seg,
                  refer,
-                 formatType
+                 formatType,
                  ) -> None:
         self.Bbox = Bbox
         self.imgName = imgName
@@ -65,7 +84,7 @@ class setDatasets:
         self.w,self.h = imgWidth,imgHeight
         self.objUniq = objUniq
         self.objCustom = objcustom # 추후에 사용 가능 
-
+        self.form = formatType
         self.refer = ReadtoJson(refer) 
 
         self.seg = seg
@@ -73,7 +92,6 @@ class setDatasets:
         self.key3d = kp3d
         self.Rbox = RBbox
         self.box3dpx = box3dpx
-        self.form = formatType
 
     def getimgName(self):
         return self.imgName
@@ -99,12 +117,13 @@ class setDatasets:
         if self.form == 1:
             return self.key2d.getCOCO() 
         elif self.form == 2:
-            pass 
+             pass 
+    def getkeypoint2dName(self):
+        return self.key2d.getKpName()
     def getkeypoint3d(self):
         if self.form == 1:
-            return 
-
-                    
+            return self.key3d.getCOCO()
+      
 class AllDatasets:
     def __init__(self) -> None:
         self._datasets = [] 
@@ -113,4 +132,7 @@ class AllDatasets:
 
     def getDatasets(self):
         return self._datasets
+    def removeDatasets(self):
+        self._datasets = [] 
+   
     
